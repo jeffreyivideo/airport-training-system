@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; padding: 20px; font-family: '微軟正黑體', sans-serif; }
+        .container { max-width: 650px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h2 { font-weight: bold; color: #2c3e50; }
+        .form-label { font-weight: 600; color: #34495e; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="text-center mb-4">職業安全衛生教育訓練報名系統</h2>
+      <form id="registrationForm" onsubmit="handleFormSubmit(event)">
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">航廈 *</label>
+              <select name="terminal" class="form-select" required>
+                <option value="">請選擇</option>
+                <option value="第一航廈">第一航廈</option>
+                <option value="第二航廈">第二航廈</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+    
+            <div class="col-md-6 mb-3">
+              <label class="form-label">班別 *</label>
+              <select name="shift" class="form-select" required>
+                <option value="">請選擇</option>
+                <option value="早班">早班</option>
+                <option value="中班">中班</option>
+                <option value="夜班">夜班</option>
+                <option value="常日班">常日班</option>
+              </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">姓名 *</label>
+              <input type="text" name="name" class="form-control" required>
+            </div>
+    
+            <div class="col-md-6 mb-3">
+              <label class="form-label">出生年月日 *</label>
+              <input type="date" name="dob" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">手機號碼 *</label>
+          <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}" placeholder="例如: 0912345678" required>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">學歷 *</label>
+              <select name="education" class="form-select" required>
+                <option value="">請選擇</option>
+                <option value="國中(含)以下">國中(含)以下</option>
+                <option value="高中/職">高中/職</option>
+                <option value="專科">專科</option>
+                <option value="大學">大學</option>
+                <option value="碩士(含)以上">碩士(含)以上</option>
+              </select>
+            </div>
+    
+            <div class="col-md-6 mb-3">
+              <label class="form-label">畢業學校 *</label>
+              <input type="text" name="school" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">地址 *</label>
+          <input type="text" name="address" class="form-control" required>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="mb-4">
+          <label class="form-label">選擇課程梯次 *</label>
+          <select name="course" class="form-select" required>
+            <option value="">請展開選擇您要報名的場次</option>
+            <option value="9/7-9/16 工安協會(中壢) 6天">9/7-9/16 中華民國工業安全衛生協會(中壢) - 6天 09:00-17:00</option>
+            <option value="9/12-10/4 勞安學會(桃園) 假日班">9/12-10/4 中國勞工安全衛生管理學會(桃園) - 假日班 09:00-18:00</option>
+            <option value="10/1-10/8 勞安學會(桃園) 平日班">10/1-10/8 中國勞工安全衛生管理學會(桃園) - 平日班 09:00-18:00</option>
+            <option value="10/14-10/30 祐大技術顧問(中壢)">10/14-10/30 祐大技術顧問股份有限公司(中壢)</option>
+            <option value="10/16-10/23 工安協會(桃園)">10/16-10/23 中華民國工業安全衛生協會(桃園)</option>
+            <option value="10/20-10/29 工安協會(中壢) 6天">10/20-10/29 中華民國工業安全衛生協會(中壢) - 6天 09:00-17:00</option>
+            <option value="11/14-11/29 工安協會(中壢) 日間班">11/14-11/29 中華民國工業安全衛生協會(中壢) - 日間班 (共6個白天)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2" id="submitBtn">提交報名資料</button>
+      </form>
+      <div id="resultMsg" class="mt-3 text-center" style="display:none;"></div>
+    </div>
+
+    <script>
+      function handleFormSubmit(event) {
+        event.preventDefault();
+        
+        var submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = '資料傳送中...';
+        
+        var form = document.getElementById('registrationForm');
+        var formData = new FormData(form);
+        var formObject = {};
+        formData.forEach(function(value, key){
+            formObject[key] = value;
+        });
+        
+        google.script.run
+          .withSuccessHandler(function(response) {
+            var msgDiv = document.getElementById('resultMsg');
+            msgDiv.style.display = 'block';
+            if(response === 'success') {
+              msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已安全建檔。</div>';
+              form.reset();
+            } else {
+              msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + response + '</div>';
+            }
+            submitBtn.disabled = false;
+            submitBtn.innerText = '提交報名資料';
+          })
+          .processForm(formObject);
+      }
+    </script>
+  </body>
+</html>

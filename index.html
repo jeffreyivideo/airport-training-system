@@ -148,77 +148,78 @@
     </div>
 
     <script>
-      // 請將這裡替換為您剛剛「新增部署」取得的最新 GAS 網址
-    var gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbyNJSaDqOEBC0YicSYqyL6OpJcJTM21kh_6G8PhDsNDcG6t4Y6dSJi30mpZM7kHjwYw/exec'; 
+      // 👇 請將您原始的 script.google.com 網址貼在下面這一行 👇
+      // ⚠️ 絕對不能用截圖上那一串 script.googleusercontent.com 開頭的網址喔！
+      const gasWebAppUrl = 'https://script.google.com/macros/s/您的專屬ID/exec'; 
 
-    // 當網頁一打開時，自動執行以下動作抓取課程
-    document.addEventListener('DOMContentLoaded', function() {
-        var courseSelect = document.getElementById('courseSelect');
-        
-        fetch(gasWebAppUrl)
-            .then(response => response.json())
-            .then(data => {
-                // 清空「載入中」的字眼
-                courseSelect.innerHTML = '<option value="">請展開選擇您要報名的場次</option>';
-                
-                // 把試算表抓回來的資料一筆一筆塞進下拉式選單
-                data.forEach(function(course) {
-                    var option = document.createElement('option');
-                    option.value = course;
-                    option.textContent = course;
-                    courseSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error("讀取課程失敗:", error);
-                courseSelect.innerHTML = '<option value="">課程載入失敗，請檢查網路後重新整理</option>';
-            });
-    });
-     
+      // ==========================================
+      // 1. 網頁載入時，自動抓取課程 (GET)
+      // ==========================================
+      document.addEventListener('DOMContentLoaded', function() {
+          const courseSelect = document.getElementById('courseSelect');
+          
+          fetch(gasWebAppUrl)
+              .then(response => response.json())
+              .then(data => {
+                  // 清空載入中字眼
+                  courseSelect.innerHTML = '<option value="">請展開選擇您要報名的場次</option>';
+                  
+                  // 將試算表資料一筆一筆塞入選單
+                  data.forEach(function(course) {
+                      const option = document.createElement('option');
+                      option.value = course;
+                      option.textContent = course;
+                      courseSelect.appendChild(option);
+                  });
+              })
+              .catch(error => {
+                  console.error("讀取課程失敗:", error);
+                  courseSelect.innerHTML = '<option value="">課程載入失敗，請檢查網路後重新整理</option>';
+              });
+      });
+
+      // ==========================================
+      // 2. 表單送出時，寫入報名資料 (POST)
+      // ==========================================
       function handleFormSubmit(event) {
-        event.preventDefault();
-        
-        var submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.innerText = '資料傳送中...';
-        
-        var form = document.getElementById('registrationForm');
-        var formData = new FormData(form);
-        var formObject = {};
-        formData.forEach(function(value, key){
-            formObject[key] = value;
-        });
+          event.preventDefault();
+          
+          const submitBtn = document.getElementById('submitBtn');
+          submitBtn.disabled = true;
+          submitBtn.innerText = '資料傳送中...';
+          
+          const form = document.getElementById('registrationForm');
+          const formData = new FormData(form);
+          const formObject = {};
+          formData.forEach((value, key) => { formObject[key] = value; });
 
-        // ⚠️ 提醒：請務必將下方的網址替換回您自己的 Apps Script Web App URL ⚠️
-        var gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbyNJSaDqOEBC0YicSYqyL6OpJcJTM21kh_6G8PhDsNDcG6t4Y6dSJi30mpZM7kHjwYw/exec'; 
-        
-        fetch(gasWebAppUrl, {
-          method: 'POST',
-          body: JSON.stringify(formObject),
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8' 
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          var msgDiv = document.getElementById('resultMsg');
-          msgDiv.style.display = 'block';
-          if(data.result === 'success') {
-            msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已安全建檔。</div>';
-            form.reset();
-          } else {
-            msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
-          }
-          submitBtn.disabled = false;
-          submitBtn.innerText = '提交報名資料';
-        })
-        .catch(error => {
-          var msgDiv = document.getElementById('resultMsg');
-          msgDiv.style.display = 'block';
-          msgDiv.innerHTML = '<div class="alert alert-danger">網路連線錯誤，請稍後再試。</div>';
-          submitBtn.disabled = false;
-          submitBtn.innerText = '提交報名資料';
-        });
+          fetch(gasWebAppUrl, {
+            method: 'POST',
+            body: JSON.stringify(formObject),
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8' 
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            const msgDiv = document.getElementById('resultMsg');
+            msgDiv.style.display = 'block';
+            if(data.result === 'success') {
+              msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已安全建檔。</div>';
+              form.reset();
+            } else {
+              msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
+            }
+            submitBtn.disabled = false;
+            submitBtn.innerText = '提交報名資料';
+          })
+          .catch(error => {
+            const msgDiv = document.getElementById('resultMsg');
+            msgDiv.style.display = 'block';
+            msgDiv.innerHTML = '<div class="alert alert-danger">網路連線錯誤，請稍後再試。</div>';
+            submitBtn.disabled = false;
+            submitBtn.innerText = '提交報名資料';
+          });
       }
     </script>
   </body>

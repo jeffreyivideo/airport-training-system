@@ -137,15 +137,8 @@
 
         <div class="mb-4">
           <label class="form-label">選擇課程梯次 *</label>
-          <select name="course" class="form-select" required>
-            <option value="">請展開選擇您要報名的場次</option>
-            <option value="9/7-9/16 工安協會(中壢) 6天">9/7-9/16 中華民國工業安全衛生協會(中壢) - 6天 09:00-17:00</option>
-            <option value="9/12-10/4 勞安學會(桃園) 假日班">9/12-10/4 中國勞工安全衛生管理學會(桃園) - 假日班 09:00-18:00</option>
-            <option value="10/1-10/8 勞安學會(桃園) 平日班">10/1-10/8 中國勞工安全衛生管理學會(桃園) - 平日班 09:00-18:00</option>
-            <option value="10/14-10/30 祐大技術顧問(中壢)">10/14-10/30 祐大技術顧問股份有限公司(中壢)</option>
-            <option value="10/16-10/23 工安協會(桃園)">10/16-10/23 中華民國工業安全衛生協會(桃園)</option>
-            <option value="10/20-10/29 工安協會(中壢) 6天">10/20-10/29 中華民國工業安全衛生協會(中壢) - 6天 09:00-17:00</option>
-            <option value="11/14-11/29 工安協會(中壢) 日間班">11/14-11/29 中華民國工業安全衛生協會(中壢) - 日間班 (共6個白天)</option>
+          <select name="course" id="courseSelect" class="form-select" required>
+            <option value="">課程資料自動載入中，請稍候...</option>
           </select>
         </div>
 
@@ -155,6 +148,33 @@
     </div>
 
     <script>
+      // 請將這裡替換為您剛剛「新增部署」取得的最新 GAS 網址
+    var gasWebAppUrl = '請在這裡貼上您的_GAS_網頁應用程式網址'; 
+
+    // 當網頁一打開時，自動執行以下動作抓取課程
+    document.addEventListener('DOMContentLoaded', function() {
+        var courseSelect = document.getElementById('courseSelect');
+        
+        fetch(gasWebAppUrl)
+            .then(response => response.json())
+            .then(data => {
+                // 清空「載入中」的字眼
+                courseSelect.innerHTML = '<option value="">請展開選擇您要報名的場次</option>';
+                
+                // 把試算表抓回來的資料一筆一筆塞進下拉式選單
+                data.forEach(function(course) {
+                    var option = document.createElement('option');
+                    option.value = course;
+                    option.textContent = course;
+                    courseSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("讀取課程失敗:", error);
+                courseSelect.innerHTML = '<option value="">課程載入失敗，請檢查網路後重新整理</option>';
+            });
+    });
+     
       function handleFormSubmit(event) {
         event.preventDefault();
         

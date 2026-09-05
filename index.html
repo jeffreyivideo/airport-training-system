@@ -205,7 +205,7 @@
             const msgDiv = document.getElementById('resultMsg');
             msgDiv.style.display = 'block';
             if(data.result === 'success') {
-              msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已安全建檔。</div>';
+              msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已送出。</div>';
               form.reset();
             } else {
               msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';

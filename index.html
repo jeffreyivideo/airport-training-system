@@ -205,14 +205,34 @@
             const msgDiv = document.getElementById('resultMsg');
             msgDiv.style.display = 'block';
             if(data.result === 'success') {
-              msgDiv.innerHTML = '<div class="alert alert-success">報名成功！您的資料已送出。</div>';
-              form.reset();
-            } else {
-              msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
-            }
+            // 隱藏原本的表單與按鈕，讓畫面變得乾淨
+            form.style.display = 'none';
+            submitBtn.style.display = 'none';
+            
+            // 顯示置中的超大成功提示
+            msgDiv.innerHTML = `
+              <div class="alert alert-success text-center py-5 shadow-sm" style="border-radius: 12px;">
+                <h3 class="fw-bold mb-3" style="color: #0f5132;">🎉 報名成功！</h3>
+                <p class="fs-5">您的資料已安全建檔。</p>
+                <hr class="my-4">
+                <p class="mb-0 text-muted fw-bold">您現在可以安全地關閉此網頁了。</p>
+                <p class="text-muted small mt-2">(視窗將嘗試於 3 秒後自動關閉)</p>
+              </div>
+            `;
+            
+            // 延遲 3 秒後嘗試自動關閉視窗
+            setTimeout(() => {
+              window.opener = null;
+              window.open('', '_self');
+              window.close();
+            }, 3000);
+            
+          } else {
+            // 如果失敗的處理維持不變
+            msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
             submitBtn.disabled = false;
             submitBtn.innerText = '提交報名資料';
-          })
+          }
           .catch(error => {
             const msgDiv = document.getElementById('resultMsg');
             msgDiv.style.display = 'block';

@@ -7,25 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { 
-            /* 👇 替換為您的背景圖檔名，若您上傳的檔名不同請在此修改 */
-            background-image: url('./bg.jpg'); 
-            
-            /* 若您還沒上傳圖片，可以先暫時用這張航空主題的測試圖，請將上方那行刪除，改用下方這行： */
-            /* background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop'); */
-            
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding: 20px; 
-            font-family: '微軟正黑體', sans-serif; 
-            position: relative;
-            min-height: 100vh;
-        }
-
-        body { 
-            /* 👇 這裡已經幫您替換成線上高畫質的飛機圖片網址 */
             background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop'); 
-            
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -34,8 +16,6 @@
             position: relative;
             min-height: 100vh;
         }
-
-        /* 增加半透明黑色遮罩，凸顯白色的報名表單 */
         body::before {
             content: "";
             position: fixed;
@@ -43,29 +23,21 @@
             background-color: rgba(0, 0, 0, 0.4); 
             z-index: -1;
         }
-
         .container { 
             max-width: 650px; 
-            background: rgba(255, 255, 255, 0.95); /* 表單微透明設計 */
+            background: rgba(255, 255, 255, 0.95); 
             padding: 35px; 
             border-radius: 12px; 
             box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
         }
         h2 { font-weight: bold; color: #2c3e50; }
         .form-label { font-weight: 600; color: #34495e; }
-        
-        /* Logo 圖片樣式設定 */
-        .logo-img {
-            max-height: 80px; /* 限制 Logo 高度，避免佔據太大版面 */
-            display: block;
-            margin: 0 auto 20px auto; /* 圖片置中並與下方標題保持距離 */
-        }
+        .logo-img { max-height: 80px; display: block; margin: 0 auto 20px auto; }
     </style>
   </head>
   <body>
     <div class="container">
       
-      <!-- 👇 替換為您的 Logo 圖檔名，若您上傳的檔名不同請在此修改 -->
       <img src="./logo.png" alt="公司Logo" class="logo-img" onerror="this.style.display='none'"> 
       
       <h2 class="text-center mb-4">職業安全衛生教育訓練報名系統</h2>
@@ -78,9 +50,9 @@
                 <option value="">請選擇</option>
                 <option value="第一航廈">第一航廈</option>
                 <option value="第二航廈">第二航廈</option>
+                <option value="其他">其他</option>
               </select>
             </div>
-    
             <div class="col-md-6 mb-3">
               <label class="form-label">班別 *</label>
               <select name="shift" class="form-select" required>
@@ -88,6 +60,7 @@
                 <option value="早班">早班</option>
                 <option value="中班">中班</option>
                 <option value="夜班">夜班</option>
+                <option value="常日班">常日班</option>
               </select>
             </div>
         </div>
@@ -97,7 +70,6 @@
               <label class="form-label">姓名 *</label>
               <input type="text" name="name" class="form-control" required>
             </div>
-    
             <div class="col-md-6 mb-3">
               <label class="form-label">出生年月日 *</label>
               <input type="date" name="dob" class="form-control" required>
@@ -109,8 +81,9 @@
           <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}" placeholder="例如: 0912345678" required>
         </div>
 
+        <!-- 👇 重新排版的三欄式：學歷、學校、科系 👇 -->
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="form-label">學歷 *</label>
               <select name="education" class="form-select" required>
                 <option value="">請選擇</option>
@@ -121,10 +94,13 @@
                 <option value="碩士(含)以上">碩士(含)以上</option>
               </select>
             </div>
-    
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="form-label">畢業學校 *</label>
               <input type="text" name="school" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">科系 / 主修 *</label>
+              <input type="text" name="major" class="form-control" required>
             </div>
         </div>
 
@@ -148,23 +124,16 @@
     </div>
 
     <script>
-      // 👇 請將您原始的 script.google.com 網址貼在下面這一行 👇
-      // ⚠️ 絕對不能用截圖上那一串 script.googleusercontent.com 開頭的網址喔！
-      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbyNJSaDqOEBC0YicSYqyL6OpJcJTM21kh_6G8PhDsNDcG6t4Y6dSJi30mpZM7kHjwYw/exec'; 
+      // ⚠️ 請記得在下方引號內，貼上您剛剛重新部署後拿到的最新 GAS 網址 ⚠️
+      const gasWebAppUrl = '請在這裡貼上您的_GAS_網頁應用程式網址'; 
 
-      // ==========================================
-      // 1. 網頁載入時，自動抓取課程 (GET)
-      // ==========================================
       document.addEventListener('DOMContentLoaded', function() {
           const courseSelect = document.getElementById('courseSelect');
           
           fetch(gasWebAppUrl)
               .then(response => response.json())
               .then(data => {
-                  // 清空載入中字眼
                   courseSelect.innerHTML = '<option value="">請展開選擇您要報名的場次</option>';
-                  
-                  // 將試算表資料一筆一筆塞入選單
                   data.forEach(function(course) {
                       const option = document.createElement('option');
                       option.value = course;
@@ -178,9 +147,6 @@
               });
       });
 
-      // ==========================================
-      // 2. 表單送出時，寫入報名資料 (POST)
-      // ==========================================
       function handleFormSubmit(event) {
           event.preventDefault();
           

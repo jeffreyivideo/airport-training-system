@@ -32,14 +32,15 @@
         }
         
         /* 👇 終極修正標題折行：進一步縮小字體與字距，保證手機上一行顯示 */
+        /* 👇 放大字體並增加行距，讓兩行字看起來更舒適 */
         .main-title {
             font-weight: bold; 
             color: #2c3e50;
-            font-size: 1.1rem; 
-            letter-spacing: -0.5px; 
+            font-size: 1.6rem; /* 放大手機版字體 */
+            line-height: 1.4;  /* 增加上下行距 */
         }
         @media (min-width: 576px) {
-            .main-title { font-size: 1.75rem; letter-spacing: normal; } 
+            .main-title { font-size: 2.2rem; } /* 放大電腦版字體 */
         }
         
         .form-label { font-weight: 600; color: #34495e; }
@@ -53,7 +54,8 @@
     <div class="container">
       <img src="./logo.png" alt="公司Logo" class="logo-img" onerror="this.style.display='none'"> 
       
-      <h1 class="text-center mb-4 main-title">職業安全衛生教育訓練報名系統</h1>
+      <!-- 👇 加入 <br> 讓標題分兩行顯示 -->
+      <h1 class="text-center mb-4 main-title">職業安全衛生教育訓練<br>報名系統</h1>
       
       <form id="registrationForm" onsubmit="handleFormSubmit(event)">
         

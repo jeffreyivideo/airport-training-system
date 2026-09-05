@@ -31,20 +31,20 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
         }
         
-        /* 👇 修正標題折行：加入響應式大小設定 */
+        /* 👇 終極修正標題折行：進一步縮小字體與字距，保證手機上一行顯示 */
         .main-title {
             font-weight: bold; 
             color: #2c3e50;
-            font-size: 1.35rem; /* 手機版字體縮小，避免折行 */
+            font-size: 1.1rem; 
+            letter-spacing: -0.5px; 
         }
         @media (min-width: 576px) {
-            .main-title { font-size: 1.75rem; } /* 電腦版恢復大字體 */
+            .main-title { font-size: 1.75rem; letter-spacing: normal; } 
         }
         
         .form-label { font-weight: 600; color: #34495e; }
         .logo-img { max-height: 70px; display: block; margin: 0 auto 15px auto; }
         
-        /* 卡片清單樣式 */
         .list-group-item input[type="radio"] { margin-top: 0.35rem; transform: scale(1.2); }
         .list-group-item:has(input[type="radio"]:checked) { background-color: #f0f7ff; border-color: #0d6efd; }
     </style>
@@ -53,7 +53,6 @@
     <div class="container">
       <img src="./logo.png" alt="公司Logo" class="logo-img" onerror="this.style.display='none'"> 
       
-      <!-- 套用新的標題樣式 class="main-title" -->
       <h1 class="text-center mb-4 main-title">職業安全衛生教育訓練報名系統</h1>
       
       <form id="registrationForm" onsubmit="handleFormSubmit(event)">
@@ -138,7 +137,7 @@
     </div>
 
     <script>
-      // ⚠️ 關鍵提醒：請務必將下方的中文替換為您的 Apps Script 網址 ⚠️
+      // 🚨🚨🚨 嚴重警告：請務必將下一行的中文，替換成您的 Google Apps Script 網址！ 🚨🚨🚨
       const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbyNJSaDqOEBC0YicSYqyL6OpJcJTM21kh_6G8PhDsNDcG6t4Y6dSJi30mpZM7kHjwYw/exec'; 
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -208,7 +207,6 @@
             msgDiv.style.display = 'block';
             
             if(data.result === 'success') {
-              // 👇 報名成功後隱藏表單，顯示完成畫面並嘗試關閉網頁
               form.style.display = 'none';
               submitBtn.style.display = 'none';
               

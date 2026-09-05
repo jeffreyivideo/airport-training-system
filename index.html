@@ -30,27 +30,32 @@
             border-radius: 12px; 
             box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
         }
-        h2 { font-weight: bold; color: #2c3e50; }
-        .form-label { font-weight: 600; color: #34495e; }
-        .logo-img { max-height: 80px; display: block; margin: 0 auto 20px auto; }
         
-        /* 隱藏預設單選按鈕，讓整個卡片都可以點擊 */
-        .list-group-item input[type="radio"] {
-            margin-top: 0.35rem;
-            transform: scale(1.2);
+        /* 👇 修正標題折行：加入響應式大小設定 */
+        .main-title {
+            font-weight: bold; 
+            color: #2c3e50;
+            font-size: 1.35rem; /* 手機版字體縮小，避免折行 */
         }
-        /* 被選中時的背景顏色變化 */
-        .list-group-item:has(input[type="radio"]:checked) {
-            background-color: #f0f7ff;
-            border-color: #0d6efd;
+        @media (min-width: 576px) {
+            .main-title { font-size: 1.75rem; } /* 電腦版恢復大字體 */
         }
+        
+        .form-label { font-weight: 600; color: #34495e; }
+        .logo-img { max-height: 70px; display: block; margin: 0 auto 15px auto; }
+        
+        /* 卡片清單樣式 */
+        .list-group-item input[type="radio"] { margin-top: 0.35rem; transform: scale(1.2); }
+        .list-group-item:has(input[type="radio"]:checked) { background-color: #f0f7ff; border-color: #0d6efd; }
     </style>
   </head>
   <body>
     <div class="container">
       <img src="./logo.png" alt="公司Logo" class="logo-img" onerror="this.style.display='none'"> 
       
-      <h2 class="text-center mb-4">職業安全衛生教育訓練報名系統</h2>
+      <!-- 套用新的標題樣式 class="main-title" -->
+      <h1 class="text-center mb-4 main-title">職業安全衛生教育訓練報名系統</h1>
+      
       <form id="registrationForm" onsubmit="handleFormSubmit(event)">
         
         <div class="row">
@@ -60,6 +65,7 @@
                 <option value="">請選擇</option>
                 <option value="第一航廈">第一航廈</option>
                 <option value="第二航廈">第二航廈</option>
+                <option value="其他">其他</option>
               </select>
             </div>
             <div class="col-md-6 mb-3">
@@ -69,6 +75,7 @@
                 <option value="早班">早班</option>
                 <option value="中班">中班</option>
                 <option value="夜班">夜班</option>
+                <option value="常日班">常日班</option>
               </select>
             </div>
         </div>
@@ -118,7 +125,6 @@
 
         <hr class="mb-4">
 
-        <!-- 👇 升級為美化的卡片單選清單 👇 -->
         <div class="mb-4">
           <label class="form-label d-block">選擇課程梯次 *</label>
           <div id="courseSelect" class="list-group shadow-sm border" style="max-height: 400px; overflow-y: auto;">
@@ -132,7 +138,7 @@
     </div>
 
     <script>
-      // ⚠️ 請務必替換為您剛剛「新增部署」後取得的最新 GAS 網址 ⚠️
+      // ⚠️ 關鍵提醒：請務必將下方的中文替換為您的 Apps Script 網址 ⚠️
       const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbyNJSaDqOEBC0YicSYqyL6OpJcJTM21kh_6G8PhDsNDcG6t4Y6dSJi30mpZM7kHjwYw/exec'; 
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -141,11 +147,10 @@
           fetch(gasWebAppUrl)
               .then(response => response.json())
               .then(data => {
-                  courseSelect.innerHTML = ''; // 清空載入中字眼
+                  courseSelect.innerHTML = ''; 
                   
                   data.forEach(function(course) {
                       const label = document.createElement('label');
-                      // 加入 d-flex 讓按鈕和文字左右並排，py-3 增加點擊範圍
                       label.className = 'list-group-item list-group-item-action d-flex gap-3 align-items-start py-3';
                       label.style.cursor = 'pointer';
 
@@ -175,7 +180,7 @@
               })
               .catch(error => {
                   console.error("讀取課程失敗:", error);
-                  courseSelect.innerHTML = '<div class="list-group-item text-center text-danger py-4">課程載入失敗，請檢查網路後重新整理</div>';
+                  courseSelect.innerHTML = '<div class="list-group-item text-center text-danger py-4">課程載入失敗，請檢查網址設定或網路連線</div>';
               });
       });
 
@@ -183,10 +188,12 @@
           event.preventDefault();
           
           const submitBtn = document.getElementById('submitBtn');
+          const form = document.getElementById('registrationForm');
+          const msgDiv = document.getElementById('resultMsg');
+          
           submitBtn.disabled = true;
           submitBtn.innerText = '資料傳送中...';
           
-          const form = document.getElementById('registrationForm');
           const formData = new FormData(form);
           const formObject = {};
           formData.forEach((value, key) => { formObject[key] = value; });
@@ -194,45 +201,40 @@
           fetch(gasWebAppUrl, {
             method: 'POST',
             body: JSON.stringify(formObject),
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8' 
-            }
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
           })
           .then(response => response.json())
           .then(data => {
-            const msgDiv = document.getElementById('resultMsg');
             msgDiv.style.display = 'block';
+            
             if(data.result === 'success') {
-            // 隱藏原本的表單與按鈕，讓畫面變得乾淨
-            form.style.display = 'none';
-            submitBtn.style.display = 'none';
-            
-            // 顯示置中的超大成功提示
-            msgDiv.innerHTML = `
-              <div class="alert alert-success text-center py-5 shadow-sm" style="border-radius: 12px;">
-                <h3 class="fw-bold mb-3" style="color: #0f5132;">🎉 報名成功！</h3>
-                <p class="fs-5">您的資料已安全建檔。</p>
-                <hr class="my-4">
-                <p class="mb-0 text-muted fw-bold">您現在可以安全地關閉此網頁了。</p>
-                <p class="text-muted small mt-2">(視窗將嘗試於 3 秒後自動關閉)</p>
-              </div>
-            `;
-            
-            // 延遲 3 秒後嘗試自動關閉視窗
-            setTimeout(() => {
-              window.opener = null;
-              window.open('', '_self');
-              window.close();
-            }, 3000);
-            
-          } else {
-            // 如果失敗的處理維持不變
-            msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
-            submitBtn.disabled = false;
-            submitBtn.innerText = '提交報名資料';
-          }
+              // 👇 報名成功後隱藏表單，顯示完成畫面並嘗試關閉網頁
+              form.style.display = 'none';
+              submitBtn.style.display = 'none';
+              
+              msgDiv.innerHTML = `
+                <div class="alert alert-success text-center py-5 shadow-sm" style="border-radius: 12px; background-color: #d1e7dd; border: 1px solid #badbcc;">
+                  <h3 class="fw-bold mb-3" style="color: #0f5132;">🎉 報名成功！</h3>
+                  <p class="fs-5" style="color: #0f5132;">您的資料已安全建檔。</p>
+                  <hr class="my-4" style="border-color: #badbcc;">
+                  <p class="mb-0 text-muted fw-bold">您現在可以安全地關閉此網頁了。</p>
+                  <p class="text-muted small mt-2">(視窗將嘗試自動關閉...)</p>
+                </div>
+              `;
+              
+              setTimeout(() => {
+                window.opener = null;
+                window.open('', '_self');
+                window.close();
+              }, 3000);
+              
+            } else {
+              msgDiv.innerHTML = '<div class="alert alert-danger">系統錯誤：' + data.message + '</div>';
+              submitBtn.disabled = false;
+              submitBtn.innerText = '提交報名資料';
+            }
+          })
           .catch(error => {
-            const msgDiv = document.getElementById('resultMsg');
             msgDiv.style.display = 'block';
             msgDiv.innerHTML = '<div class="alert alert-danger">網路連線錯誤，請稍後再試。</div>';
             submitBtn.disabled = false;
